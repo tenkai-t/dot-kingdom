@@ -66,7 +66,7 @@ bt=setInterval(()=>{while(bn<a.currentTime+.25){stepPlay(T,pp,bs,bn,sd);bn+=sd;b
 document.addEventListener('visibilitychange',()=>{if(AC){document.hidden?AC.suspend():AC.resume()}});
 
 // ================= data
-const ROLES=['アタッカー','タンク','ヒーラー','魔法','サポート'],FIX={[K.yuusha]:0,[K.hime]:2,[K.mahoutsukai]:3,[K.kishi]:1};
+const ROLES=['アタッカー','タンク','ヒーラー','魔法','サポート'],FIX={[K.yuusha]:0,[K.hime]:2,[K.mahoutsukai]:3,[K.kishi]:1,[K.priest]:2};
 const roleOf=c=>c in FIX?FIX[c]:(c*7+3)%5;
 const RB=[{hp:46,mp:10,atk:12,mat:4,def:5,spd:8},{hp:62,mp:8,atk:9,mat:3,def:9,spd:5},{hp:38,mp:22,atk:6,mat:11,def:4,spd:7},{hp:34,mp:26,atk:5,mat:14,def:3,spd:7},{hp:42,mp:18,atk:7,mat:8,def:5,spd:9}];
 function base(c,lv,rr){const b=RB[rr==null?roleOf(c):rr],v=.9+rnd(c+1)*.2,g=1+.16*(lv-1);return{mhp:Math.round(b.hp*v*(1+.2*(lv-1))),mmp:Math.round(b.mp*(1+.12*(lv-1))),atk:Math.round(b.atk*v*g),mat:Math.round(b.mat*v*g),def:Math.round(b.def*v*g),spd:Math.round(b.spd*(.9+rnd(c+4)*.2)*(1+.04*(lv-1)))}}
@@ -100,7 +100,7 @@ cave1:{n:'ゴブリンの洞くつ',bgm:'dungeon',wx:6,enc:{pool:['bat','spider'
 desert:{n:'さばく',bgm:'field',wx:8,enc:{pool:['cactus','mummy','spider','snake','gaikotsu','bat','zombie'],lv:[9,15],r:1,t:'s',rate:.1,hm:1.15,am:1.2,grp:[2,2,3,3]},g:mkMap(20,20,'s',[['rect',3,3,4,3,'~'],['rect',8,16,5,1,'#'],['pt',10,16,'S'],['bd','C'],['pt',10,0,'S'],['sc','C','s',.05,13],['pt',10,1,'s'],['pt',10,15,'s'],['pt',16,10,'s'],['pt',5,10,'s'],['pt',14,5,'s']])},
 ruins:{n:'さばくの遺跡',bgm:'dungeon',wx:-1,enc:{pool:['gaikotsu','mummy','golem','zombie','spider','obake'],lv:[14,20],r:1,t:'fa',rate:.11,hm:1.2,am:1.25,grp:[2,3,3,3]},g:mkMap(14,16,'#',[['rect',1,1,12,14,'f'],['rect',6,2,2,12,'a'],['pt',3,4,'P'],['pt',10,4,'P'],['pt',3,8,'P'],['pt',10,8,'P'],['pt',3,12,'P'],['pt',10,12,'P'],['pt',6,15,'S']])}};
 const NPC={village:[{x:3,y:5,c:K.cook,t:'inn',n:'宿屋の主人'},{x:10,y:5,c:K.farmer,t:'shop',n:'道具屋'},{x:16,y:5,c:K.blacksmith,t:'wshop',n:'武器屋'},{x:13,y:8,c:K.cowboy,t:'tavern',n:'酒場の主人'},
-{x:6,y:9,c:K.hime,t:'join',who:K.hime,n:'お姫様',fl:'j_hime',text:['わたくしはこの国の姫です。魔王の手下に捕まりそうになり、この村へ逃げてきました。','あなたは勇者さま！？ どうか、わたくしも旅にお連れください。'],yes:'お姫様が仲間になった！'},
+{x:6,y:9,c:K.maid,t:'talk',n:'村の娘',text:['姫様はお城に残られて、王国のために祈っておられるそうよ。','王宮僧侶さまが、勇者さまと一緒に旅立ったんだって。']},
 {x:4,y:12,c:K.student,t:'talk',n:'学生',text:['この村を出ると草原だよ。草原の先に、ゴブリンの洞くつがあるんだ。','魔王の手下が、洞くつに村人を閉じ込めているらしい…。']},
 {x:14,y:12,c:K.kappa,t:'talk',n:'河童',text:['戦いが苦手なら、宿屋で休むといいぞ。','お金がたまったら、武器屋で装備を買うのじゃ。']},
 {x:12,y:10,c:-1,t:'save',n:'セーブの標識'}],
@@ -112,6 +112,19 @@ ruins:{x:6,y:3,c:K.dragon,fl:'boss2',lv:21,r:2,mul:3.6,ro:0,n:'ドラゴン',pre
 const CHEST={field1:[{x:3,y:12,fl:'c1',it:{potion:3}},{x:17,y:2,fl:'c2',g:100}],cave1:[{x:2,y:11,fl:'c3',eq:'iron_sword'}],desert:[{x:16,y:10,fl:'c4',eq:'steel_sword'}],ruins:[{x:2,y:2,fl:'c5',eq:'amulet'}]};
 const WARP={village:[{x:9,y:15,to:'field1',tx:9,ty:1},{x:10,y:15,to:'field1',tx:10,ty:1}],field1:[{x:9,y:0,to:'village',tx:9,ty:14},{x:10,y:0,to:'village',tx:10,ty:14},{x:16,y:16,to:'cave1',tx:6,ty:12}],cave1:[{x:6,y:13,to:'field1',tx:16,ty:15},{x:6,y:0,to:'desert',tx:10,ty:1,need:'boss1'}],desert:[{x:10,y:0,to:'cave1',tx:6,ty:1},{x:10,y:16,to:'ruins',tx:6,ty:14}],ruins:[{x:6,y:15,to:'desert',tx:10,ty:15}]};
 MAPS.ruins.g[1][6]='S';
+// ================= castle start (Ver 2.1)
+MAPS.castle={n:'ドット王城',bgm:'town',wx:-1,g:mkMap(20,16,'#',[['rect',1,1,18,14,'f'],['rect',7,2,6,3,'a'],['rect',9,5,2,10,'a'],['pt',4,4,'P'],['pt',15,4,'P'],['pt',4,9,'P'],['pt',15,9,'P'],['pt',6,0,'L'],['pt',13,0,'L'],['pt',9,15,'S'],['pt',10,15,'S']])};
+NPC.castle=[{x:10,y:2,c:K.king,t:'talk',n:'王様',text:['よく来た、勇者よ。魔王がよみがえり、人々は各地に閉じ込められてしまった。','魔王城は結界に守られておる。結界を解くには、各地のボスが持つ「封印の鍵」を集めるのじゃ。','まずは南のはじまりの村へ行くがよい。洞くつに閉じ込められた人々を、助けてやってくれ。']},
+{x:8,y:2,c:K.hime,t:'talk',n:'お姫様',text:['勇者さま、わたくしはお城に残り、王国のために祈り続けます。','どうか、人々を助けてください。…ご無事で。']},
+{x:10,y:4,c:K.priest,t:'join',who:K.priest,n:'王宮僧侶',fl:'j_priest',text:['私は王宮僧侶です。王の命により、あなたと旅を共にします。','傷ついた者を癒やすのは、私にお任せを。'],yes:'王宮僧侶が仲間になった！'},
+{x:6,y:3,c:K.kishi,t:'talk',n:'兵士',text:['勇者さま、ご武運を！','王宮僧侶さまに話しかけると、仲間になってくれますよ。']},
+{x:13,y:3,c:K.kishi,t:'talk',n:'兵士',text:['城の南の階段から、はじまりの村へ行けます。','村の宿屋で休めば、HPとMPが回復しますよ。']},
+{x:12,y:13,c:K.dragoon,t:'talk',n:'兵士長',text:['私がこの城の兵士長だ。城の守りは任せておけ。','お前は人々を助け、封印の鍵を集めるのだ。頼んだぞ、勇者！']},
+{x:12,y:10,c:-1,t:'save',n:'セーブの標識'}];
+CHEST.castle=[];
+WARP.castle=[{x:9,y:15,to:'village',tx:9,ty:1},{x:10,y:15,to:'village',tx:10,ty:1}];
+MAPS.village.g[0][9]='S';MAPS.village.g[0][10]='S';
+(WARP.village=WARP.village||[]).push({x:9,y:0,to:'castle',tx:9,ty:14},{x:10,y:0,to:'castle',tx:10,ty:14});
 // ================= world expansion
 Object.assign(TCH,{I:['snow',0],i:['ice',0],e:['dungeon_floor',0],K:['castle_wall',1],y:['crystal',1],B:['bookshelf',1]});
 function RNG(sd){let z=sd;return()=>{z=(z*16807)%2147483647;return z/2147483647}}
@@ -175,7 +188,7 @@ link('throne','abyss1','boss5');link('abyss1','abyss2');(WARP.abyss2=WARP.abyss2
 const SHOP=['potion','hipotion','ether','revive'],WSHOP=['wood_sword','iron_sword','wand','cloth','leather','ring_s','ring_a'];
 // ================= state
 function addChar(c,lv){S.ch[c]={lv,exp:0,hp:0,mp:0,e:{}};const s=cst(c);S.ch[c].hp=s.mhp;S.ch[c].mp=s.mmp;S.own[c]=1}
-function newGame(){S={v:1,party:[K.yuusha],res:[],ch:{},own:{},inv:{potion:3},eqi:{wood_sword:1},gold:100000,fl:{},pos:{m:'village',x:9,y:12,d:'u'},steps:0,pt:0};addChar(K.yuusha,100);S.ch[K.yuusha].e.w='wood_sword';S.eqi.wood_sword=0}
+function newGame(){S={v:1,party:[K.yuusha],res:[],ch:{},own:{},inv:{potion:3},eqi:{wood_sword:1},gold:60,fl:{},pos:{m:'castle',x:9,y:13,d:'u'},steps:0,pt:0};addChar(K.yuusha,1);S.ch[K.yuusha].e.w='wood_sword';S.eqi.wood_sword=0}
 const ST=(()=>{try{localStorage.setItem('_t','1');localStorage.removeItem('_t');return localStorage}catch(e){const m={};return{getItem:k=>k in m?m[k]:null,setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}})();
 function sanitize(o){if(!o||o.v!=1||!Array.isArray(o.party)||!o.ch||!MAPS[o.pos&&o.pos.m])throw 0;const s={v:1,party:[],res:[],ch:{},own:{},inv:{},eqi:{},fl:{},gold:cl(o.gold|0,0,9999999),steps:o.steps|0,pt:o.pt|0,vb:o.vb,vs:o.vs,mute:o.mute?1:0,pos:{m:o.pos.m,x:o.pos.x|0,y:o.pos.y|0,d:'udlr'.includes(o.pos.d)?o.pos.d:'d'}};
 for(const k of Object.keys(o.ch)){const c=+k,d=o.ch[k];if(!(c>=0&&c<100)||!d)continue;s.ch[c]={lv:cl(d.lv|0,1,100),exp:Math.max(0,d.exp|0),hp:0,mp:0,e:{}};for(const t of['w','a','x'])if(d.e&&EQ[d.e[t]]&&EQ[d.e[t]].t==t)s.ch[c].e[t]=d.e[t];s.ch[c].hp=Math.max(0,d.hp|0);s.ch[c].mp=Math.max(0,d.mp|0);s.own[c]=1}
@@ -352,9 +365,9 @@ window.addEventListener('keyup',ev=>{HOLD=''});
 // ================= title / boot
 function bgm(){if(!UNL||!S)return;let k=null;if(!S.mute&&vb()>0){if(mode=='title')k='town';else if(mode=='battle')k=BT&&BT.opts.boss?'boss':'battle';else k=MAPS[MAP].bgm}const sh=0,key=k?k+sh:'';if(key===bk)return;if(!k)bgmStop();else bgmPlay(k,sh)}
 TRK.field={bpm:100,root:62,sc:'maj',ch:[[0,0],[-5,0],[-3,1],[-7,0]],rest:.3,arp:0,lead:'triangle',lv:.2,dr:1,bb:2,seed:41};TRK.dungeon={bpm:78,root:50,sc:'phr',ch:[[0,1],[-4,0],[-2,0],[-5,0]],rest:.45,arp:0,lead:'triangle',lv:.22,dr:0,bb:2,seed:27};
-function titleM(){const has=[0,1,2].some(i=>rd(i));$('#tm').innerHTML=`<button class="btn" data-a="tnew">はじめから</button><button class="btn g" data-a="tcont" ${has?'':'disabled'}>つづきから</button><small style="margin-top:8px">Ver 2.0テスト（勇者Lv100・所持金100000G）</small>`}
+function titleM(){const has=[0,1,2].some(i=>rd(i));$('#tm').innerHTML=`<button class="btn" data-a="tnew">はじめから</button><button class="btn g" data-a="tcont" ${has?'':'disabled'}>つづきから</button><small style="margin-top:8px">Ver 2.1（お城スタート・全5地域＋クリア後の世界）</small>`}
 function tslV(){ov(`<div class="card"><b>つづきから</b>${[0,1,2].map(i=>{const d=rd(i);return`<div class="row"><span>スロット${i+1}<br><small>${d?(MAPS[d.pos.m].n+' ／ Lv'+Math.max(...d.party.map(c=>d.ch[c].lv))+' ／ '+d.gold+'G'):'空き'}</small></span><button class="btn" data-a="tsl" data-i="${i}" ${d?'':'disabled'}>選ぶ</button></div>`}).join('')}<button class="btn g" data-a="cl">閉じる</button></div>`)}
-async function startGame(isNew){cl2();$('#ttl').style.display='none';mode='field';$('#pad').style.display='flex';bgm();if(isNew){await say(['ここは ドット王国。','ある日、魔王が現れ、人々は各地の洞くつや塔に閉じ込められてしまった。','少年勇者は、仲間を集める旅に出る…。\n（A・タップで文字を送る／十字キーで移動／MENUで各種メニュー）'])}}
+async function startGame(isNew){cl2();$('#ttl').style.display='none';mode='field';$('#pad').style.display='flex';bgm();if(isNew){await say(['ここは ドット王国。','ある日、魔王がよみがえり、人々は各地の洞くつや遺跡に閉じ込められてしまった。','魔王城は結界に守られている。結界を解くには、各地のボスが持つ「封印の鍵」を集めなければならない。','勇者は王様に召集され、冒険に旅立つ…。\n（A・タップで文字を送る／十字キーで移動／MENUで各種メニュー）'])}}
 async function ld(s){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=s})}
 (async()=>{IM.m=await Promise.all(SRC.m.map(ld));IM.k=await Promise.all(SRC.k.map(ld));for(const k of['s','ks','f','w','t'])IM[k]=await ld(SRC[k]);S={mute:0,ch:{}};setMap('village',9,12,'u');S=null;titleM();requestAnimationFrame(loop)})();
 </script></body></html>
