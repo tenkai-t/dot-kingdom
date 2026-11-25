@@ -175,7 +175,7 @@ link('throne','abyss1','boss5');link('abyss1','abyss2');(WARP.abyss2=WARP.abyss2
 const SHOP=['potion','hipotion','ether','revive'],WSHOP=['wood_sword','iron_sword','wand','cloth','leather','ring_s','ring_a'];
 // ================= state
 function addChar(c,lv){S.ch[c]={lv,exp:0,hp:0,mp:0,e:{}};const s=cst(c);S.ch[c].hp=s.mhp;S.ch[c].mp=s.mmp;S.own[c]=1}
-function newGame(){S={v:1,party:[K.yuusha],res:[],ch:{},own:{},inv:{potion:3},eqi:{wood_sword:1},gold:60,fl:{},pos:{m:'village',x:9,y:12,d:'u'},steps:0,pt:0};addChar(K.yuusha,1);S.ch[K.yuusha].e.w='wood_sword';S.eqi.wood_sword=0}
+function newGame(){S={v:1,party:[K.yuusha],res:[],ch:{},own:{},inv:{potion:3},eqi:{wood_sword:1},gold:100000,fl:{},pos:{m:'village',x:9,y:12,d:'u'},steps:0,pt:0};addChar(K.yuusha,100);S.ch[K.yuusha].e.w='wood_sword';S.eqi.wood_sword=0}
 const ST=(()=>{try{localStorage.setItem('_t','1');localStorage.removeItem('_t');return localStorage}catch(e){const m={};return{getItem:k=>k in m?m[k]:null,setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}})();
 function sanitize(o){if(!o||o.v!=1||!Array.isArray(o.party)||!o.ch||!MAPS[o.pos&&o.pos.m])throw 0;const s={v:1,party:[],res:[],ch:{},own:{},inv:{},eqi:{},fl:{},gold:cl(o.gold|0,0,9999999),steps:o.steps|0,pt:o.pt|0,vb:o.vb,vs:o.vs,mute:o.mute?1:0,pos:{m:o.pos.m,x:o.pos.x|0,y:o.pos.y|0,d:'udlr'.includes(o.pos.d)?o.pos.d:'d'}};
 for(const k of Object.keys(o.ch)){const c=+k,d=o.ch[k];if(!(c>=0&&c<100)||!d)continue;s.ch[c]={lv:cl(d.lv|0,1,100),exp:Math.max(0,d.exp|0),hp:0,mp:0,e:{}};for(const t of['w','a','x'])if(d.e&&EQ[d.e[t]]&&EQ[d.e[t]].t==t)s.ch[c].e[t]=d.e[t];s.ch[c].hp=Math.max(0,d.hp|0);s.ch[c].mp=Math.max(0,d.mp|0);s.own[c]=1}
@@ -352,7 +352,7 @@ window.addEventListener('keyup',ev=>{HOLD=''});
 // ================= title / boot
 function bgm(){if(!UNL||!S)return;let k=null;if(!S.mute&&vb()>0){if(mode=='title')k='town';else if(mode=='battle')k=BT&&BT.opts.boss?'boss':'battle';else k=MAPS[MAP].bgm}const sh=0,key=k?k+sh:'';if(key===bk)return;if(!k)bgmStop();else bgmPlay(k,sh)}
 TRK.field={bpm:100,root:62,sc:'maj',ch:[[0,0],[-5,0],[-3,1],[-7,0]],rest:.3,arp:0,lead:'triangle',lv:.2,dr:1,bb:2,seed:41};TRK.dungeon={bpm:78,root:50,sc:'phr',ch:[[0,1],[-4,0],[-2,0],[-5,0]],rest:.45,arp:0,lead:'triangle',lv:.22,dr:0,bb:2,seed:27};
-function titleM(){const has=[0,1,2].some(i=>rd(i));$('#tm').innerHTML=`<button class="btn" data-a="tnew">はじめから</button><button class="btn g" data-a="tcont" ${has?'':'disabled'}>つづきから</button><small style="margin-top:8px">Ver 2.0（全5地域＋クリア後の世界）</small>`}
+function titleM(){const has=[0,1,2].some(i=>rd(i));$('#tm').innerHTML=`<button class="btn" data-a="tnew">はじめから</button><button class="btn g" data-a="tcont" ${has?'':'disabled'}>つづきから</button><small style="margin-top:8px">Ver 2.0テスト（勇者Lv100・所持金100000G）</small>`}
 function tslV(){ov(`<div class="card"><b>つづきから</b>${[0,1,2].map(i=>{const d=rd(i);return`<div class="row"><span>スロット${i+1}<br><small>${d?(MAPS[d.pos.m].n+' ／ Lv'+Math.max(...d.party.map(c=>d.ch[c].lv))+' ／ '+d.gold+'G'):'空き'}</small></span><button class="btn" data-a="tsl" data-i="${i}" ${d?'':'disabled'}>選ぶ</button></div>`}).join('')}<button class="btn g" data-a="cl">閉じる</button></div>`)}
 async function startGame(isNew){cl2();$('#ttl').style.display='none';mode='field';$('#pad').style.display='flex';bgm();if(isNew){await say(['ここは ドット王国。','ある日、魔王が現れ、人々は各地の洞くつや塔に閉じ込められてしまった。','少年勇者は、仲間を集める旅に出る…。\n（A・タップで文字を送る／十字キーで移動／MENUで各種メニュー）'])}}
 async function ld(s){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=s})}
